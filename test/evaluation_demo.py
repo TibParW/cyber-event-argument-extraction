@@ -1,9 +1,3 @@
-"""
-evaluation_demo.py
-สาธิตขั้นตอนการตรวจข้อสอบ คิดคะแนน และคำนวณเปอร์เซ็นต์ (Precision, Recall, F1)
-ตำแหน่งไฟล์: D:\\Kasetsart\\NLP\\LPLLL\\evaluation_demo.py
-"""
-
 import sys
 if sys.platform == "win32":
     if hasattr(sys.stdout, 'reconfigure'):

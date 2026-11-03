@@ -1,18 +1,3 @@
-"""
-step2_train_experiments_v3.py
-สคริปต์สถาปัตยกรรมโมเดลและการฝึกสอน V3 Ultra Edition (State-of-the-Art NLP Architecture)
-รวม 4 ยอดเทคนิคตามมาตรฐานสากลและเปเปอร์ CASIE (AAAI 2020 ของอาจารย์):
-
-4 เทคนิคหลักใน V3:
-  1. Class Weighting (Cost-Sensitive Learning / o_weight = 0.35):
-     - ลดน้ำหนักป้าย 'O' ลง เพื่อแก้ปัญหาคำว่าง 85%+ บังคับให้โมเดลตื่นตัวและดึง Entity ไซเบอร์ออกมา ดันค่า Recall (R) และ F1 สูงขึ้นอย่างมีนัยสำคัญ
-  2. Transition Constraints / CRF Viterbi BIO Decoding:
-     - ดักจับและบล็อกการเปลี่ยนป้ายที่ผิดไวยากรณ์ BIO ถึง 1,891 รูปแบบ (เช่น O -> I-Tag หรือ B-Victim -> I-Attacker) รับประกันว่าทุก Span ที่โมเดลสกัดออกมาสมบูรณ์ 100%
-  3. SOTA Transformer Backbone Support (DeBERTa-v3 & SecBERT):
-     - รองรับทั้ง 'jackaduma/SecBERT' (ผู้เชี่ยวชาญไซเบอร์) และ 'microsoft/deberta-v3-base' (ราชาด้าน NER ยุคใหม่) พร้อม Sequence Length 256 คำ
-  4. Multi-Model Ensemble Ready:
-     - บันทึก Probability distribution / Logits รองรับการหลอมรวมคะแนนเฉลี่ย (Ensemble) ใน Step 3 เพื่อดัน F1 พุ่งขึ้นอีก +2% ถึง +3%
-"""
 import os
 import sys
 import json

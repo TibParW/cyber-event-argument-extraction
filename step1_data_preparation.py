@@ -1,23 +1,3 @@
-"""
-step1_data_preparation.py
-สคริปต์ประมวลผลข้อมูล 1,000 ข่าวจริง จาก CASIE Dataset
-พร้อมสกัดฟีเจอร์ POS Tag และ General NER Tag ตามที่อาจารย์แนะนำ
-
-กระบวนการ:
-  1. โหลดรายชื่อไฟล์ตาม Official Split ของอาจารย์โดยตรง:
-     - test__testlista.txt -> Test Set (100 ข่าว)
-     - train+validate__annlistver3k_traina.txt -> แบ่ง Train 800 ข่าว (80%) และ Val 100 ข่าว (10%)
-  2. รวมเฉลย Nugget (Trigger) และ Argument (Roles) เข้าด้วยกัน (Merge Spans)
-  3. หั่นประโยคและใช้ spaCy สกัดพร้อมกัน:
-     - tokens (คำ)
-     - pos_tags (Universal POS Tag เช่น NOUN, VERB, PROPN, NUM)
-     - ner_gen_tags (General NER Tag เช่น ORG, PERSON, MONEY, DATE)
-     - ner_tags (ป้ายกำกับเฉลย CASIE BIO 63 คลาส)
-  4. กรอง Class Imbalance:
-     - Train/Val: เก็บประโยคที่มี Entity 100% และสุ่มประโยคว่าง 40%
-     - Test: เก็บ 100% ทุกประโยคเพื่อสะท้อนโลกความเป็นจริง
-  5. บันทึกผลลัพธ์เป็น train.json, val.json, test.json และตาราง Mapping ทุกฟีเจอร์ลง dataset/
-"""
 import sys
 import json
 import re

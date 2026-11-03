@@ -1,14 +1,3 @@
-"""
-step3_evaluate_experiments_v3.py
-สคริปต์ตรวจข้อสอบ Test Set และสร้าง Master Ablation Table V3 Ultra Edition
-รองรับ:
-  1. การประเมินผลแบบเดี่ยว (Single Model) และทุกโมเดล (--all)
-  2. การคำนวณ 2 มาตรฐานสากล:
-     - Strict F1 (Exact Match 100%): ตรวจเป๊ะทุกตำแหน่งและประเภท
-     - Relaxed F1 (TAC/NIST Overlap Match): เกณฑ์เดียวกับในเปเปอร์ AAAI 2020 ของอาจารย์
-  3. เทคนิคที่ 2: Viterbi Constrained BIO Decoding เพื่อรับประกันความถูกต้องของ Span
-  4. เทคนิคที่ 4: Multi-Model Ensemble Averaging (--ensemble) หลอมรวมพลังโมเดลชั้นนำเพื่อดัน F1 ขึ้นสู่จุดสูงสุด
-"""
 import sys
 import json
 import argparse
