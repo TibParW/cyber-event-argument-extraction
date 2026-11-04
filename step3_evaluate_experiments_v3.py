@@ -38,6 +38,8 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "dataset"
 MODELS_DIR = BASE_DIR / "models"
+if not MODELS_DIR.exists() and (BASE_DIR.parent / "models").exists():
+    MODELS_DIR = BASE_DIR.parent / "models"
 
 
 # ==============================================================================

@@ -3,6 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![HuggingFace Transformers](https://img.shields.io/badge/Transformers-4.30+-yellow.svg)](https://huggingface.co/docs/transformers/)
+[![HuggingFace Model](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-WraPbiT%2Fsecbert--casie--extraction-orange)](https://huggingface.co/WraPbiT/secbert-casie-extraction)
 [![spaCy](https://img.shields.io/badge/spaCy-3.5+-09a3d5.svg)](https://spacy.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -174,6 +175,7 @@ Test extraction on custom unstructured threat texts:
 ```bash
 python step4_interactive_app.py
 ```
+> **Note**: If pre-trained weights are not found locally in `models/`, the script will automatically download the fine-tuned checkpoint from Hugging Face Hub ([`WraPbiT/secbert-casie-extraction`](https://huggingface.co/WraPbiT/secbert-casie-extraction)).
 
 ### 6. Interactive Web Dashboard
 

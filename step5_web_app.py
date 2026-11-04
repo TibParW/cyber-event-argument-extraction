@@ -17,6 +17,8 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 from step4_interactive_app import (
     BASE_DIR,
     MODEL_DIR,
+    HF_REPO_ID,
+    load_secbert_pipeline,
     SAMPLE_1,
     SAMPLE_2,
     SAMPLE_3,
@@ -137,27 +139,16 @@ def launch_web_ui(model, tokenizer, id2label, device="cpu", port=7860, inbrowser
 
 def main():
     """ฟังก์ชันหลักสำหรับรัน Step 5 ในรูปแบบเว็บแอปโดยตรง"""
-    if not MODEL_DIR.exists():
-        print(f"Error: Model directory not found: {MODEL_DIR.resolve()}")
-        print("   Please ensure 'secbert_wra' exists in models/")
-        sys.exit(1)
-
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     print("=" * 80)
     print("  [Step 5] SecBERT Cyber Threat Intelligence Extractor (Web Application)")
     print(f"  Device    : {device.upper()}")
-    print(f"  Model Dir : {MODEL_DIR.name}")
     print("=" * 80)
 
     print("\nLoading SecBERT model and label mappings...")
-    with open(MODEL_DIR / "label_mapping.json", 'r', encoding='utf-8') as f:
-        mapping = json.load(f)
-    id2label = mapping["id2label"]
-
-    tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR))
-    model = AutoModelForTokenClassification.from_pretrained(str(MODEL_DIR)).to(device)
-    model.eval()
+    model, tokenizer, id2label = load_secbert_pipeline(device=device)
+    print("=" * 80)
     print("Model ready!\n")
 
     launch_web_ui(model, tokenizer, id2label, device=device)

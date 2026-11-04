@@ -172,7 +172,7 @@ class ExtraFeatureDataCollator:
 
 
 # ==============================================================================
-# Callback บันทึก Log และพล็อตกราฟ Loss Curve ตามที่อาจารย์วาด
+# Callback บันทึก Log และพล็อตกราฟ Loss Curve 
 # ==============================================================================
 class LossPlotAndLogCallback(TrainerCallback):
     """

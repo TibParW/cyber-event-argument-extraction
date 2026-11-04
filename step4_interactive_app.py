@@ -13,6 +13,46 @@ if sys.platform == "win32":
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_DIR = BASE_DIR / "models" / "secbert_wra"
+if not MODEL_DIR.exists() and (BASE_DIR.parent / "models" / "secbert_wra").exists():
+    MODEL_DIR = BASE_DIR.parent / "models" / "secbert_wra"
+
+HF_REPO_ID = "WraPbiT/secbert-casie-extraction"
+
+
+def load_secbert_pipeline(device="cpu"):
+    """
+    โหลดโมเดล SecBERT, Tokenizer และ id2label mapping:
+      1. หากพบโมเดลในเครื่อง (models/secbert_wra) จะโหลดจาก Local ทันที
+      2. หากไม่พบ (เช่น ผู้ใช้เพิ่ง git clone มาใหม่) จะดาวน์โหลดอัตโนมัติจาก Hugging Face Hub (WraPbiT/secbert-casie-extraction)
+    """
+    local_candidates = [
+        BASE_DIR / "models" / "secbert_wra",
+        BASE_DIR.parent / "models" / "secbert_wra"
+    ]
+    model_path = None
+    for cand in local_candidates:
+        if cand.exists() and (cand / "model.safetensors").exists():
+            model_path = cand
+            break
+
+    if model_path is not None:
+        print(f"  Model Source : Local ({model_path.resolve()})")
+        with open(model_path / "label_mapping.json", 'r', encoding='utf-8') as f:
+            id2label = json.load(f)["id2label"]
+        tokenizer = AutoTokenizer.from_pretrained(str(model_path))
+        model = AutoModelForTokenClassification.from_pretrained(str(model_path)).to(device)
+    else:
+        print(f"  Model Source : Hugging Face Hub ({HF_REPO_ID})")
+        print("  Downloading checkpoint files from Hugging Face...")
+        from huggingface_hub import hf_hub_download
+        mapping_file = hf_hub_download(repo_id=HF_REPO_ID, filename="label_mapping.json")
+        with open(mapping_file, 'r', encoding='utf-8') as f:
+            id2label = json.load(f)["id2label"]
+        tokenizer = AutoTokenizer.from_pretrained(HF_REPO_ID)
+        model = AutoModelForTokenClassification.from_pretrained(HF_REPO_ID).to(device)
+
+    model.eval()
+    return model, tokenizer, id2label
 
 # รหัสสี ANSI สำหรับตกแต่ง Terminal
 C_RESET = "\033[0m"
@@ -127,7 +167,7 @@ def make_badge(text, role, is_html=False):
 
 
 def generate_executive_narrative(events, all_entities, is_html=False):
-    """สังเคราะห์ข้อความสรุปใจความสำคัญ (Executive Summary) พร้อมป้ายบทบาท"""
+    """สังเคราะห์ข้อความสรุปใจความสำคัญ (Executive Summary) พร้อมป้ายบทบาท (NLG)"""
     if not events and not all_entities:
         return "No confirmed cybersecurity incident details could be synthesized from this text."
 
@@ -287,21 +327,13 @@ def main():
     parser.add_argument("--web", action="store_true", help="เปิดโหมด Web Application (Step 5) ทันที")
     args = parser.parse_args()
 
-    if not MODEL_DIR.exists():
-        print(f"Error: Model directory not found: {MODEL_DIR.resolve()}\n   Please ensure 'secbert_wra' exists in models/")
-        sys.exit(1)
-
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("=" * 80 + f"\n  {C_BOLD}[Step 4] SecBERT Cyber Threat Intelligence Extraction (Interactive CLI){C_RESET}")
-    print(f"  Device    : {device.upper()}\n  Model Dir : {MODEL_DIR.name}\n" + "=" * 80)
+    print(f"  Device       : {device.upper()}")
 
     print("\nLoading SecBERT model and label mappings...")
-    with open(MODEL_DIR / "label_mapping.json", 'r', encoding='utf-8') as f:
-        id2label = json.load(f)["id2label"]
-
-    tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR))
-    model = AutoModelForTokenClassification.from_pretrained(str(MODEL_DIR)).to(device)
-    model.eval()
+    model, tokenizer, id2label = load_secbert_pipeline(device=device)
+    print("=" * 80)
     print("Model ready!\n")
 
     if args.web:
